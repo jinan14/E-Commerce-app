@@ -55,15 +55,19 @@ const AddProduct = () => {
       alert('Product created successfully!');
       console.log(response.data);
     } catch (error) {
+        alert('Product already exists');
       console.error('Error creating product:', error);
     }
   };
 
   return (
     <div>
-      <h2>Add New Product</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className='font-bold text-3xl mb-5'>Add New Product</h2>
+      <form onSubmit={handleSubmit}
+        className="border-2 border-gray-700 flex flex-col gap-5 w-full max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
+      >
         <input
+        className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
           type="text"
           name="name"
           placeholder="Product Name"
@@ -72,6 +76,7 @@ const AddProduct = () => {
           required
         />
         <textarea
+         className="w-full h-20 sm:h-32 resize-none px-3 py-2 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-gray-500"
           name="description"
           placeholder="Description"
           value={product.description}
@@ -79,6 +84,7 @@ const AddProduct = () => {
           required
         />
         <input
+         className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
           type="number"
           name="price"
           placeholder="Price"
@@ -87,6 +93,7 @@ const AddProduct = () => {
           required
         />
         <input
+         className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
           type="text"
           name="category"
           placeholder="Category"
@@ -97,6 +104,7 @@ const AddProduct = () => {
 
         {/* Image Upload */}
         <input
+         className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
           type="file"
           accept="image/*"
           multiple
