@@ -1,18 +1,19 @@
 import { useState } from 'react'
 import './App.css'
-import AddProduct from './AddProduct'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import AddProduct from './Components/AddProduct'
+import Shop from './Components/Shop';
 
 function App() {
-  
-
   return (
-   
-      <div>
-        <AddProduct/>
-      </div>
-     
-    
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Shop />} />
+        <Route path="/add-product" element={<AddProduct />} />
+      </Routes>
+    </Router>
+  );
 }
+
 
 export default App
