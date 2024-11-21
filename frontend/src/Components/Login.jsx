@@ -12,6 +12,7 @@ const Login = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    //name is either the email or password
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -20,14 +21,15 @@ const Login = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/login', formData);
+      const response = await axios.post('http://localhost:5000/api/v1/user/login', formData);
+     //extract the token and the msg from the response
       const { token, message } = response.data;
 
-      // Save token to localStorage or cookies (as per your auth strategy)
-      localStorage.setItem('authToken', token);
+      // Save token to localStorage
+      localStorage.setItem('UserToken', token);
 
       alert(message); // Success message
-      navigate('/shop'); // Redirect to the shop or another page
+      navigate('/'); // Redirect to the shop
     } catch (err) {
       const errorMessage =
         err.response?.data?.errors?.[0]?.message || 'Failed to login. Please try again.';
@@ -40,18 +42,18 @@ const Login = () => {
       <h2 className="text-3xl font-bold text-center mb-5">Login</h2>
       <form
         onSubmit={handleSubmit}
-        className="border p-6 rounded-lg shadow-md max-w-md mx-auto flex flex-col gap-4"
+         className="border-2 border-gray-700 flex flex-col gap-5 w-[50%] max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
       >
         {error && <p className="text-red-500 text-center">{error}</p>}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium">
+        <div className='flex flex-col '>
+          <label htmlFor="email" className=" text-sm font-medium">
             Email
           </label>
           <input
             id="email"
             name="email"
             type="email"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
             placeholder="Enter your email"
             value={formData.email}
             onChange={handleInputChange}
@@ -66,7 +68,7 @@ const Login = () => {
             id="password"
             name="password"
             type="password"
-            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
             placeholder="Enter your password"
             value={formData.password}
             onChange={handleInputChange}

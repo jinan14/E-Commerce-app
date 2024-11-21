@@ -104,7 +104,8 @@ const AddProduct = () => {
             className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
             type="file"
             accept="image/*"
-            multiple
+            multiple 
+            max={5}
             onChange={handleImageChange}
           />
           <button type="submit">Add Product</button>
