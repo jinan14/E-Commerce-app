@@ -104,6 +104,11 @@ const Shop = () => {
           >
             SignUp
           </button>
+          <button 
+           onClick={() => navigate('/Order')}
+          >
+            Order
+          </button>
         </div>
       </div>
       <br />
@@ -132,7 +137,9 @@ const Shop = () => {
               <p className="text-white font-bold text-start">${product.price}</p>
 
               <div className="flex gap-5">
-                <button className="text-white p-2 px-3 rounded-3xl hover:bg-blue-600">
+                <button className="text-white p-2 px-3 rounded-3xl hover:bg-blue-600"
+                 onClick={() => navigate('/Cart')}
+                >
                   Add to Cart
                 </button>
                 <button
