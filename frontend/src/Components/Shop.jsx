@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { IoSearch } from "react-icons/io5";
-import useCartStore from '../store/useCartStore';
 import Header from './Header';
+
 
 const Shop = () => {
   const navigate = useNavigate();
@@ -102,13 +101,13 @@ const Shop = () => {
           <>
             <button
               onClick={prevImage}
-              className="absolute top-1/2 left-2 transform -translate-y-1/2 flex items-center justify-center backdrop-blur-xl text-white p-2 w-8 h-8 rounded-full shadow hover:bg-gray-700"
+              className="absolute top-1/2 left-2 transform -translate-y-1/2 flex items-center justify-center backdrop-blur-lg text-white p-2 w-8 h-8 rounded-full shadow hover:bg-gray-700"
             >
               &#8249;
             </button>
             <button
               onClick={nextImage}
-              className="absolute top-1/2 right-2 transform -translate-y-1/2 text-white p-2 w-8 h-8 backdrop-blur-xl flex items-center justify-center rounded-full shadow hover:bg-gray-700"
+              className="absolute top-1/2 right-2 transform -translate-y-1/2 text-white p-2 w-8 h-8 backdrop-blur-lg flex items-center justify-center rounded-full shadow hover:bg-gray-700"
             >
               &#8250;
             </button>
@@ -119,23 +118,25 @@ const Shop = () => {
   };
 
   return (
-    <div className="container mx-auto p-5">
+    <div className="container mx-auto p-5 ">
       {/* Navigation Bar */}
+   
 
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <br />
-      <hr className="my-4" />
+   
+     
+      <hr className="my-8" />
 
       {/* Success and Error Messages */}
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       {error && <p className="text-red-500">{error}</p>}
 
       {/* Product Grid */}
-      <div className="grid grid-cols-4 gap-11">
-      {filteredProducts.map((product) => (
+      <div className="grid grid-cols-4 gap-11 ">
+        {filteredProducts.map((product) => (
           <div
             key={product._id}
-            className="border p-4 shadow-md w-[300px] h-[450px] gap-3 rounded-lg flex flex-col"
+            className="border p-4 shadow-md w-[300px] h-[470px] gap-3 rounded-lg flex flex-col"
           >
             {/* Product Image Carousel */}
             <div className="w-full h-[50%] relative">
@@ -144,23 +145,29 @@ const Shop = () => {
 
             {/* Product Info */}
             <div className="flex flex-col gap-3 h-[50%] items-start">
-              <h2 className="text-xl font-semibold">{product.name}</h2>
-              <p className="text-white text-center">{product.description}</p>
-              <p className="text-white">Category: {product.category}</p>
-              <p className="text-white font-bold text-start">${product.price}</p>
+              <div className="flex flex-col gap-3 h-[70%] items-start">
 
-              <div className="flex gap-5">
+                <h2 className="text-xl font-semibold">{product.name}</h2>
+                <div className='h-[50px] flex text-start'>
+                  <p className="text-white">{product.description}</p>
+                </div>
+                <p className="text-white">Category: {product.category}</p>
+                <p className="text-white font-bold text-start">${product.price}</p>
+              </div>
+
+              <div className="flex gap-5 h-[30%] items-center justify-between p-1">
                 <button
-                  className="text-white p-2 px-3 rounded-3xl hover:bg-blue-600"
+                  className="text-white p-2 px-3 rounded-3xl bg-blue-400 hover:bg-blue-600"
                   onClick={() => handleAddToCart(product._id)}                 >
                   Add to Cart
                 </button>
                 <button
                   onClick={() => navigate(`/product/${product._id}`)}
-                  className="text-white p-2 px-3 rounded-3xl hover:bg-blue-600"
+                  className="text-white p-2 px-3 rounded-3xl bg-orange-400 hover:bg-orange-500"
                 >
                   View Details
                 </button>
+               
               </div>
             </div>
           </div>

@@ -38,15 +38,20 @@ const Login = () => {
   };
 
   return (
-    <div className="container mx-auto p-5">
-      <h2 className="text-3xl font-bold text-center mb-5">Login</h2>
+    <div className="flex container h-[100vh] w-full ">
+      <div className='w-[60%] '>
+          <img className='object-cover w-full h-full' src="/login.jpg" alt="" />
+      </div>
+      <div className='w-[40%] flex items-center justify-center'>
+
       <form
         onSubmit={handleSubmit}
-         className="border-2 border-gray-700 flex flex-col gap-5 w-[50%] max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
+         className="border-2 m-auto border-gray-700 flex flex-col gap-5 w-[400px] max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
       >
+      <h2 className="text-3xl font-bold text-center mb-5">Login</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
-        <div className='flex flex-col '>
-          <label htmlFor="email" className=" text-sm font-medium">
+        <div className='flex flex-col gap-1 '>
+          <label htmlFor="email" className="font-medium flex text-lg text-start ml-3">
             Email
           </label>
           <input
@@ -60,8 +65,8 @@ const Login = () => {
             required
           />
         </div>
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium">
+        <div className='flex flex-col gap-1'>
+          <label htmlFor="password" className="font-medium flex text-lg text-start ml-3">
             Password
           </label>
           <input
@@ -82,6 +87,7 @@ const Login = () => {
           Login
         </button>
       </form>
+      </div>
     </div>
   );
 };

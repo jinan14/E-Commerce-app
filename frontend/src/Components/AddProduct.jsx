@@ -11,7 +11,7 @@ const AddProduct = () => {
   });
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
-  const navigate = useNavigate(); // React Router hook for navigation
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,14 +20,28 @@ const AddProduct = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setImages(files);
-    const previewURLs = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(previewURLs);
+
+    const uniqueFiles = files.filter(
+      (file) => !images.some((existingFile) => existingFile.name === file.name)
+    );
+
+    if (images.length + uniqueFiles.length > 5) {
+      alert('You can only upload up to 5 images.');
+      return;
+    }
+
+    setImages((prevImages) => [...prevImages, ...uniqueFiles]);
+
+    const previewURLs = uniqueFiles.map((file) => URL.createObjectURL(file));
+    setPreviewImages((prevPreviews) => [...prevPreviews, ...previewURLs]);
   };
 
   const handleImageRemove = (index) => {
     const newImages = images.filter((_, i) => i !== index);
     const newPreviews = previewImages.filter((_, i) => i !== index);
+
+    URL.revokeObjectURL(previewImages[index]);
+
     setImages(newImages);
     setPreviewImages(newPreviews);
   };
@@ -49,7 +63,7 @@ const AddProduct = () => {
         },
       });
       alert('Product created successfully!');
-      navigate('/shop'); // Navigate to Shop after successful submission
+      navigate('/shop');
     } catch (error) {
       alert('Product already exists');
       console.error('Error creating product:', error);
@@ -58,9 +72,8 @@ const AddProduct = () => {
 
   return (
     <div>
-      <h2 className="font-bold text-3xl mb-5">Add New Product</h2>
-      <div className='flex justify-center items-center '>
-
+      <h2 className="font-bold text-3xl mb-5 mt-5">Add New Product</h2>
+      <div className="flex justify-center items-center">
         <form
           onSubmit={handleSubmit}
           className="border-2 border-gray-700 flex flex-col gap-5 w-[50%] max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
@@ -104,19 +117,23 @@ const AddProduct = () => {
             className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
             type="file"
             accept="image/*"
-            multiple 
-            max={5}
+            multiple
             onChange={handleImageChange}
           />
-          <button type="submit">Add Product</button>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Add Product
+          </button>
         </form>
-        <div className='w-[50%] grid grid-cols-2 gap-4 '>
+        <div className="w-[50%] grid grid-cols-2 gap-4">
           {previewImages.map((url, index) => (
-            <div key={index} className='flex flex-col items-center'>
+            <div key={index} className="flex flex-col items-center">
               <img
                 src={url}
                 alt="Preview"
-                className='w-[200px] h-[200px] object-cover'
+                className="w-[200px] h-[200px] object-cover"
               />
               <button
                 type="button"
@@ -128,7 +145,6 @@ const AddProduct = () => {
             </div>
           ))}
         </div>
-
       </div>
     </div>
   );

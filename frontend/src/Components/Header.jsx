@@ -3,13 +3,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { IoSearch } from "react-icons/io5";
+import { FaCartShopping } from "react-icons/fa6";
+import { MdLogout } from "react-icons/md";
+
 
 function Header({ searchQuery, setSearchQuery }) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex justify-between items-center">
-      <h1 className="text-2xl font-bold">QuickShop</h1>
+    <div className="flex justify-between items-center mt-3 mb-3">
+      <h1 className="text-3xl font-bold">QuickShop</h1>
       <div className="flex gap-3 w-[30%]">
         <input
           type="search"
@@ -19,7 +22,7 @@ function Header({ searchQuery, setSearchQuery }) {
           className="w-full px-3 py-1 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
         <button
-          className="w-8 h-8 items-center flex p-2 bg-blue-600 justify-center rounded-full"
+          className="w-8 h-8 items-center flex p-2 bg-orange-400 justify-center rounded-full"
         >
           <IoSearch />
         </button>
@@ -31,7 +34,16 @@ function Header({ searchQuery, setSearchQuery }) {
         >
           Add Product
         </button>
-        <button onClick={() => navigate('/cart')}>Cart</button>
+        <button
+          className="bg-orange-400 text-xl text-white px-3 py-2 rounded-3xl hover:bg-orange-400"
+          onClick={() => navigate('/cart')}><FaCartShopping />
+        </button>
+        <button 
+        className="bg-red-500 text-xl text-white px-2 py-2 rounded-3xl hover:bg-red-400"
+         onClick={() => navigate('/login')}
+         >
+          <MdLogout />
+        </button>
       </div>
     </div>
   );
