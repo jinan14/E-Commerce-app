@@ -49,7 +49,7 @@ const AddProduct = () => {
         },
       });
       alert('Product created successfully!');
-      navigate('/'); // Navigate to Shop after successful submission
+      navigate('/shop'); // Navigate to Shop after successful submission
     } catch (error) {
       alert('Product already exists');
       console.error('Error creating product:', error);

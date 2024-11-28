@@ -26,10 +26,10 @@ const Login = () => {
       const { token, message } = response.data;
 
       // Save token to localStorage
-      localStorage.setItem('UserToken', token);
+      localStorage.setItem('Token', token);
 
       alert(message); // Success message
-      navigate('/'); // Redirect to the shop
+      navigate('/shop'); // Redirect to the shop
     } catch (err) {
       const errorMessage =
         err.response?.data?.errors?.[0]?.message || 'Failed to login. Please try again.';

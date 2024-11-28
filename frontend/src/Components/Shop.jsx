@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { IoSearch } from "react-icons/io5";
-
+import useCartStore from '../store/useCartStore';
+import Header from './Header';
 
 const Shop = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [searchQuery, setSearchQuery] = useState(''); // Search query state
 
+  // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/v1/product/retrieve/all');
-        setProducts(response.data.data); // Assuming the endpoint returns products in `data.data`
+        setProducts(response.data.data);
+        console.log('123', response.data.data)
       } catch (err) {
         setError('Failed to fetch products.');
         console.error(err);
@@ -22,6 +27,51 @@ const Shop = () => {
 
     fetchProducts();
   }, []);
+
+  // Add item to cart
+  async function handleAddToCart(productId) {
+    const token = localStorage.getItem('Token'); // Retrieve token from localStorage
+    if (!token) {
+      alert('Please log in to add items to your cart.');
+      return;
+    }
+
+    const cartUpdate = {
+      cart: {
+        [productId]: 1, // Set quantity to 1 for simplicity
+      },
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/cart/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, // Include the token in the request
+        },
+        body: JSON.stringify(cartUpdate),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Product added to cart successfully!');
+        console.log('Updated Cart:', result.data);
+      } else {
+        alert(result.message || 'Failed to add product to cart.');
+        console.error(result.errors);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('An error occurred while adding the product to the cart.');
+    }
+  }
+
+  // Filter products based on search query
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    product.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
 
   const ProductCarousel = ({ pictures }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -71,62 +121,25 @@ const Shop = () => {
   return (
     <div className="container mx-auto p-5">
       {/* Navigation Bar */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">QuickShop</h1>
-        <div className='flex gap-3 w-[30%]'>
-        <input type="search" 
-        placeholder='Search a product...'
-        className='w-full px-3 py-1 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500'
-        />
-       
-        <button 
-        className='w-8 h-8 items-center flex p-2 bg-blue-600 justify-center rounded-full'>        
-        <IoSearch />
-        </button>
-        </div>
 
-        <div className="flex gap-3">
-          <button
-            onClick={() => navigate('/add-product')}
-            className="bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600"
-          >
-            Add Product
-          </button>
-          <button
-            onClick={() => navigate('/login')}
-            className="bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600"
-          >
-            Login
-          </button>
-          <button
-            onClick={() => navigate('/signUp')}
-            className="bg-blue-500 text-white px-4 py-2 rounded-3xl hover:bg-blue-600"
-          >
-            SignUp
-          </button>
-          <button 
-           onClick={() => navigate('/Order')}
-          >
-            Order
-          </button>
-        </div>
-      </div>
+      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
       <br />
       <hr className="my-4" />
 
-      {/* Display Error */}
-      {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+      {/* Success and Error Messages */}
+      {successMessage && <p className="text-green-500">{successMessage}</p>}
+      {error && <p className="text-red-500">{error}</p>}
 
       {/* Product Grid */}
       <div className="grid grid-cols-4 gap-11">
-        {products.map((product) => (
+      {filteredProducts.map((product) => (
           <div
             key={product._id}
             className="border p-4 shadow-md w-[300px] h-[450px] gap-3 rounded-lg flex flex-col"
           >
             {/* Product Image Carousel */}
             <div className="w-full h-[50%] relative">
-              <ProductCarousel  pictures={product.pictures} />
+              <ProductCarousel pictures={product.pictures} />
             </div>
 
             {/* Product Info */}
@@ -137,9 +150,9 @@ const Shop = () => {
               <p className="text-white font-bold text-start">${product.price}</p>
 
               <div className="flex gap-5">
-                <button className="text-white p-2 px-3 rounded-3xl hover:bg-blue-600"
-                 onClick={() => navigate('/Cart')}
-                >
+                <button
+                  className="text-white p-2 px-3 rounded-3xl hover:bg-blue-600"
+                  onClick={() => handleAddToCart(product._id)}                 >
                   Add to Cart
                 </button>
                 <button

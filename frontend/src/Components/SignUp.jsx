@@ -25,14 +25,14 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/create', user);
+      const response = await axios.post('http://localhost:5000/api/v1/user/create', user);
       
       // Store the token in localStorage
-      localStorage.setItem('authToken', response.data.token);
+      localStorage.setItem('Token', response.data.token);
 
       // Navigate to the shop
       alert('Account created successfully!');
-      navigate('/');
+      navigate('/shop');
     } catch (err) {
       // Handle errors
       if (err.response && err.response.data) {

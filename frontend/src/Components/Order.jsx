@@ -10,7 +10,7 @@ function Order() {
     <div>
         <h1>Your Order</h1>
         <p>Order details go here.</p>
-        <button  onClick={() => navigate('/')}>Print Order</button>
+        <button  onClick={() => navigate('/shop')}>Print Order</button>
   
     </div>
   )
