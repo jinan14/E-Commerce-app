@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import Header from './Header';
+import { useNavigate } from 'react-router-dom';
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchCart() {
@@ -48,6 +51,36 @@ function Cart() {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   };
 
+  const proceedToCheckout = async () => {
+    const token = localStorage.getItem('Token');
+    if (!token) {
+      alert('Please log in to proceed.');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/order/create', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log(response)
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Order created successfully!');
+        navigate('/order', { state: { order: result.data } }); // Navigate to Order.jsx
+      } else {
+        setError(result.message || 'Failed to create order.');
+      }
+    } catch (error) {
+      console.error('Error creating order:', error);
+      setError('An error occurred while creating the order.');
+    }
+  };
+
   if (loading) {
     return <p>Loading your cart...</p>;
   }
@@ -57,6 +90,7 @@ function Cart() {
       <Header />
       <div className="p-4">
         <h1 className="text-2xl mb-4">Your Cart</h1>
+        {error && <p className="text-red-500">{error}</p>}
         {cartItems.length === 0 ? (
           <p>Your cart is empty.</p>
         ) : (
@@ -103,7 +137,10 @@ function Cart() {
                 <span>Total Price:</span>
                 <span>${calculateTotalPrice().toFixed(2)}</span>
               </div>
-              <button className="w-full py-2 bg-black text-white rounded hover:bg-green-500 transition">
+              <button
+                onClick={proceedToCheckout}
+                className="w-full py-2 bg-black text-white rounded hover:bg-green-500 transition"
+              >
                 Proceed to Checkout
               </button>
             </div>

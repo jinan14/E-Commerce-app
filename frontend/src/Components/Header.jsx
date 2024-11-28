@@ -31,7 +31,7 @@ function Header({ searchQuery, setSearchQuery }) {
         >
           Add Product
         </button>
-        <button onClick={() => navigate('/Order')}>Order</button>
+        <button onClick={() => navigate('/cart')}>Cart</button>
       </div>
     </div>
   );
