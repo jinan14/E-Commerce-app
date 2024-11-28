@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import { FaRegHeart } from "react-icons/fa";
 
 
 const Shop = () => {
@@ -146,8 +147,10 @@ const Shop = () => {
             {/* Product Info */}
             <div className="flex flex-col gap-3 h-[50%] items-start">
               <div className="flex flex-col gap-3 h-[70%] items-start">
-
+                <div className='flex justify-between items-center w-full'>
                 <h2 className="text-xl font-semibold">{product.name}</h2>
+                <FaRegHeart />
+                </div>
                 <div className='h-[50px] flex text-start'>
                   <p className="text-white">{product.description}</p>
                 </div>

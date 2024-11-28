@@ -6,10 +6,10 @@ import AddProduct from './Components/AddProduct'
 import Shop from './Components/Shop';
 import Login from './Components/Login';
 import SignUp from './Components/SignUp';
-import ProductDetails from './ProductDetails';
 import Cart from './Components/Cart';
 import Order from './Components/Order';
 import Header from './Components/Header';
+import ProductDetails from './Components/ProductDetails';
 function App() {
   return (
     <Router>
