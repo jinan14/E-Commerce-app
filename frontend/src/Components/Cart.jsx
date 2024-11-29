@@ -3,7 +3,7 @@ import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { RxCross2 } from "react-icons/rx";
 import toast, { Toaster } from 'react-hot-toast';
-
+import axios from 'axios'
 
 function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -15,7 +15,7 @@ function Cart() {
     async function fetchCart() {
       const token = localStorage.getItem('Token'); // Get token from local storage
       if (!token) {
-        alert('Please log in to view your cart.');
+        toast.error('Please log in to view your cart.');
         return;
       }
 
@@ -30,11 +30,11 @@ function Cart() {
         if (response.ok) {
           setCartItems(result.data);
         } else {
-          alert(result.message || 'Failed to fetch cart.');
+          toast.error(result.message || 'Failed to fetch cart.');
         }
       } catch (error) {
         console.error('Error fetching cart:', error);
-        alert('An error occurred while fetching the cart.');
+        toast.error('An error occurred while fetching the cart.');
       } finally {
         setLoading(false);
       }
@@ -57,7 +57,7 @@ function Cart() {
   const proceedToCheckout = async () => {
     const token = localStorage.getItem('Token');
     if (!token) {
-      alert('Please log in to proceed.');
+      toast.error('Please log in to proceed.');
       return;
     }
 
@@ -106,32 +106,69 @@ function Cart() {
       const result = await response.json();
 
       if (response.ok) {
-        alert(result.message || 'Product removed from cart successfully.');
+        toast.success(result.message || 'Product removed from cart successfully.');
         // Update cartItems state by filtering out the removed product
         setCartItems((prevItems) =>
           prevItems.filter((item) => item.product._id !== productId)
         );
       } else {
-        alert(result.message || 'Failed to remove product from cart.');
+        toast.error(result.message || 'Failed to remove product from cart.');
       }
     } catch (error) {
       console.error('Error removing product:', error);
-      alert('An error occurred while removing the product.');
+      toast.error('An error occurred while removing the product.');
     }
   };
 
+  const handleClearCart = async () => {
+    const token = localStorage.getItem('Token');
+
+    if (!token) {
+      toast.error('Please log in to clear your cart.');
+      return;
+    }
+
+    try {
+      const response = await axios.delete('http://localhost:5000/api/v1/cart/clearCart', {
+        headers: {
+          Authorization: `Bearer ${token}`, // Pass token in headers
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success('Cart cleared successfully!');
+
+        setCartItems([]); // Update your state to an empty array
+      } else {
+        toast.error(response.data?.message || 'Failed to clear the cart.');
+      }
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+
+      // Handle specific error messages if the backend provides them
+      const errorMessage =
+        error.response?.data?.message || 'An error occurred while clearing the cart.';
+      toast.error(errorMessage);
+    }
+  };
 
   return (
     <>
       <div className="container mx-auto p-5 ">
-      <Toaster />
+        <Toaster />
         <div className="flex justify-between items-center mt-3 mb-4">
           <h1 className="text-3xl font-bold">QuickShop</h1>
 
           <div className="flex gap-3">
             <button
-              onClick={() => navigate(-1)}
               className="bg-orange-400 text-white px-4 py-2 rounded-3xl hover:bg-orange-500"
+              onClick={() => handleClearCart()}
+            >
+              Clear Cart
+            </button>
+            <button
+              onClick={() => navigate(-1)}
+              className="bg-blue-400 text-white px-4 py-2 rounded-3xl hover:bg-blue-500"
             >
               Back
             </button>
