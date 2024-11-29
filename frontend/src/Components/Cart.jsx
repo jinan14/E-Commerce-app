@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
 import { RxCross2 } from "react-icons/rx";
+import toast, { Toaster } from 'react-hot-toast';
 
 
 function Cart() {
@@ -72,7 +73,7 @@ function Cart() {
 
       const result = await response.json();
       if (response.ok) {
-        alert('Order created successfully!');
+        toast.success('Order created successfully!');
         navigate('/order', { state: { order: result.data } }); // Navigate to Order.jsx
       } else {
         setError(result.message || 'Failed to create order.');
@@ -87,10 +88,43 @@ function Cart() {
     return <p>Loading your cart...</p>;
   }
 
+  const handleRemoveFromCart = async (productId) => {
+    const token = localStorage.getItem('Token');
+    if (!token) {
+      toast.error('Please log in to remove items from your cart.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/v1/cart/removeItemFromCart/${productId}`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`, // Include JWT token
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(result.message || 'Product removed from cart successfully.');
+        // Update cartItems state by filtering out the removed product
+        setCartItems((prevItems) =>
+          prevItems.filter((item) => item.product._id !== productId)
+        );
+      } else {
+        alert(result.message || 'Failed to remove product from cart.');
+      }
+    } catch (error) {
+      console.error('Error removing product:', error);
+      alert('An error occurred while removing the product.');
+    }
+  };
+
+
   return (
     <>
       <div className="container mx-auto p-5 ">
-
+      <Toaster />
         <div className="flex justify-between items-center mt-3 mb-4">
           <h1 className="text-3xl font-bold">QuickShop</h1>
 
@@ -141,10 +175,13 @@ function Cart() {
                           </p>
                         </div>
                         <div>
-                          <button 
-                          className="bg-red-500 text-xl text-white px-2 py-2 rounded-3xl hover:bg-red-400">
+                          <button
+                            className="bg-red-500 text-xl text-white px-2 py-2 rounded-3xl hover:bg-red-400"
+                            onClick={() => handleRemoveFromCart(item.product._id)} // Pass product ID
+                          >
                             <RxCross2 />
-                            </button>
+                          </button>
+
                         </div>
                       </div>
                     </div>

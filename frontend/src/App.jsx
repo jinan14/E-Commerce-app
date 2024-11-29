@@ -11,9 +11,12 @@ import Order from './Components/Order';
 import Header from './Components/Header';
 import ProductDetails from './Components/ProductDetails';
 import Favorites from './Components/Favorites';
+import { Toaster } from 'react-hot-toast';
+
 function App() {
   return (
     <Router>
+      <Toaster />
       <Routes>
         <Route path='/' element ={<Hero />} />
         <Route path='/header' element ={<Header />} />
@@ -25,6 +28,7 @@ function App() {
         <Route path="/Cart" element={<Cart />} />
         <Route path='/order' element={<Order />} />
         <Route path = '/favorites' element={<Favorites />} />
+       
       </Routes>
     </Router>
   );

@@ -3,6 +3,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
+
 
 const SignUp = () => {
   const [user, setUser] = useState({
@@ -31,7 +33,7 @@ const SignUp = () => {
       localStorage.setItem('Token', response.data.token);
 
       // Navigate to the shop
-      alert('Account created successfully!');
+      toast.success('Account created successfully!');
       navigate('/shop');
     } catch (err) {
       // Handle errors
@@ -45,6 +47,7 @@ const SignUp = () => {
 
   return (
     <div className="flex container h-[100vh] w-full ">
+        <Toaster />
       <div className='w-[60%] '>
         <img className='object-cover w-full h-full' src="/login.jpg" alt="" />
       </div>

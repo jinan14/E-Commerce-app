@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -28,7 +29,7 @@ const Login = () => {
       // Save token to localStorage
       localStorage.setItem('Token', token);
 
-      alert(message); // Success message
+      toast.success(message); // Success message
       navigate('/shop'); // Redirect to the shop
     } catch (err) {
       const errorMessage =
@@ -39,6 +40,7 @@ const Login = () => {
 
   return (
     <div className="flex container h-[100vh] w-full ">
+        <Toaster />
       <div className='w-[60%] '>
           <img className='object-cover w-full h-full' src="/login.jpg" alt="" />
       </div>

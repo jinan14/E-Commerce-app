@@ -3,8 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-
-
+import toast, { Toaster } from 'react-hot-toast';
 const Shop = () => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
@@ -34,7 +33,7 @@ const Shop = () => {
   async function handleAddToCart(productId) {
     const token = localStorage.getItem('Token'); // Retrieve token from localStorage
     if (!token) {
-      alert('Please log in to add items to your cart.');
+     toast.error('Please log in to add items to your cart.');
       return;
     }
 
@@ -56,15 +55,15 @@ const Shop = () => {
 
       const result = await response.json();
       if (response.ok) {
-        alert('Product added to cart successfully!');
+        toast.success('Product added to cart successfully!');
         console.log('Updated Cart:', result.data);
       } else {
-        alert(result.message || 'Failed to add product to cart.');
+        toast.error(result.message || 'Failed to add product to cart.');
         console.error(result.errors);
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while adding the product to the cart.');
+      toast.error('An error occurred while adding the product to the cart.');
     }
   }
 
@@ -141,11 +140,9 @@ const Shop = () => {
 
   return (
     <div className="container mx-auto p-5 ">
+      <Toaster />
       {/* Navigation Bar */}
-
-
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-
 
       <hr className="my-7" />
       <button
@@ -173,12 +170,12 @@ const Shop = () => {
 
             {/* Product Info */}
             <div className="flex flex-col gap-3 h-[50%] items-start">
-              <div className="flex flex-col gap-3 h-[70%] items-start">
+              <div className="flex flex-col gap-3 h-[70%] items-start w-full">
                 <div className='flex justify-between items-center w-full'>
                   <h2 className="text-xl font-semibold">{product.name}</h2>
                   <button
                     onClick={() => handleLikeClick(product._id)}
-                
+                    className='flex items-end'
                   >
                     {likedProducts.includes(product._id) ? (
                       <FaHeart className="text-red-600" />
