@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
-import { FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 
 
 const Shop = () => {
@@ -11,6 +11,8 @@ const Shop = () => {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
+  const [likedProducts, setLikedProducts] = useState([]);
+
 
   // Fetch products
   useEffect(() => {
@@ -72,6 +74,25 @@ const Shop = () => {
     product.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const handleLikeClick = (productId) => {
+    setLikedProducts((prevLikedProducts) => {
+      if (prevLikedProducts.includes(productId)) {
+        return prevLikedProducts.filter(id => id !== productId); // Remove from liked products
+      } else {
+        return [...prevLikedProducts, productId]; // Add to liked products
+      }
+    });
+  };
+  
+  const navigateToFavorites = () => {
+    // Find the liked products by matching the product ids
+    const likedProductDetails = products.filter(product =>
+      likedProducts.includes(product._id)
+    );
+
+    navigate("/favorites", { state: { likedProducts: likedProductDetails, likedProductIds: likedProducts } });
+  };
+
 
   const ProductCarousel = ({ pictures }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -121,12 +142,18 @@ const Shop = () => {
   return (
     <div className="container mx-auto p-5 ">
       {/* Navigation Bar */}
-   
+
 
       <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-   
-     
-      <hr className="my-8" />
+
+
+      <hr className="my-7" />
+      <button
+          className="text-white rounded-[20px] mb-3 text-3xl flex justify-end items-end w-full"
+          onClick={navigateToFavorites}
+        >
+          <FaHeart className="text-red-600" />
+        </button>
 
       {/* Success and Error Messages */}
       {successMessage && <p className="text-green-500">{successMessage}</p>}
@@ -148,8 +175,17 @@ const Shop = () => {
             <div className="flex flex-col gap-3 h-[50%] items-start">
               <div className="flex flex-col gap-3 h-[70%] items-start">
                 <div className='flex justify-between items-center w-full'>
-                <h2 className="text-xl font-semibold">{product.name}</h2>
-                <FaRegHeart />
+                  <h2 className="text-xl font-semibold">{product.name}</h2>
+                  <button
+                    onClick={() => handleLikeClick(product._id)}
+                
+                  >
+                    {likedProducts.includes(product._id) ? (
+                      <FaHeart className="text-red-600" />
+                    ) : (
+                      <FaRegHeart className="text-gray-500" />
+                    )}
+                  </button>
                 </div>
                 <div className='h-[50px] flex text-start'>
                   <p className="text-white">{product.description}</p>
@@ -170,7 +206,7 @@ const Shop = () => {
                 >
                   View Details
                 </button>
-               
+
               </div>
             </div>
           </div>

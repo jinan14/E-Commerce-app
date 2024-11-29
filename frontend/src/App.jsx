@@ -10,6 +10,7 @@ import Cart from './Components/Cart';
 import Order from './Components/Order';
 import Header from './Components/Header';
 import ProductDetails from './Components/ProductDetails';
+import Favorites from './Components/Favorites';
 function App() {
   return (
     <Router>
@@ -23,6 +24,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/Cart" element={<Cart />} />
         <Route path='/order' element={<Order />} />
+        <Route path = '/favorites' element={<Favorites />} />
       </Routes>
     </Router>
   );
