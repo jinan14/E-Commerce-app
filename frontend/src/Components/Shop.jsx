@@ -12,12 +12,12 @@ const Shop = () => {
   const [searchQuery, setSearchQuery] = useState(''); // Search query state
   const [likedProducts, setLikedProducts] = useState([]);
 
-
+  const token = localStorage.getItem('Token');
   // Fetch products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/product/retrieve/all');
+        const response = await axios.get('http://localhost:5000/api/v1/product/search');
         setProducts(response.data.data);
         console.log('123', response.data.data)
       } catch (err) {
@@ -33,7 +33,7 @@ const Shop = () => {
   async function handleAddToCart(productId) {
     const token = localStorage.getItem('Token'); // Retrieve token from localStorage
     if (!token) {
-     toast.error('Please log in to add items to your cart.');
+      toast.error('Please log in to add items to your cart.');
       return;
     }
 
@@ -73,25 +73,63 @@ const Shop = () => {
     product.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleLikeClick = (productId) => {
-    setLikedProducts((prevLikedProducts) => {
-      if (prevLikedProducts.includes(productId)) {
-        return prevLikedProducts.filter(id => id !== productId); // Remove from liked products
-      } else {
-        return [...prevLikedProducts, productId]; // Add to liked products
+  useEffect(() => {
+    if (!token) return;
+
+    const fetchLikedProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/v1/like/likes', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const likedIds = response.data.data.map((like) => like.productId);
+        setLikedProducts(likedIds);
+      } catch (err) {
+        console.error('Error fetching likes:', err);
       }
-    });
+    };
+
+    fetchLikedProducts();
+  }, [token]);
+
+  // Handle like click
+  const handleLikeClick = async (productId) => {
+    const token = localStorage.getItem('Token');
+    if (!token) {
+      toast.error('Please log in to like products.');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/v1/like/create', { productId }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.status === 200) {
+        // If the response is a success, toggle the like state
+        setLikedProducts((prevLikedProducts) => {
+          if (prevLikedProducts.includes(productId)) {
+            // Remove from liked products (unlike)
+            return prevLikedProducts.filter(id => id !== productId);
+          } else {
+            // Add to liked products (like)
+            return [...prevLikedProducts, productId];
+          }
+        });
+        toast.success(response.data.message); // Display success message (like/unlike)
+      }
+    } catch (error) {
+      console.error('Error liking/unliking product:', error);
+      toast.error('Error liking/unliking product.');
+    }
   };
-  
+
+
+  // Navigate to Favorites page
   const navigateToFavorites = () => {
-    // Find the liked products by matching the product ids
-    const likedProductDetails = products.filter(product =>
-      likedProducts.includes(product._id)
-    );
-
-    navigate("/favorites", { state: { likedProducts: likedProductDetails, likedProductIds: likedProducts } });
+    navigate('/favorites', { state: { likedProductIds: likedProducts } });
   };
-
 
   const ProductCarousel = ({ pictures }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -146,15 +184,11 @@ const Shop = () => {
 
       <hr className="my-7" />
       <button
-          className="text-white rounded-[20px] mb-3 text-3xl flex justify-end items-end w-full"
-          onClick={navigateToFavorites}
-        >
-          <FaHeart className="text-red-600" />
-        </button>
-
-      {/* Success and Error Messages */}
-      {successMessage && <p className="text-green-500">{successMessage}</p>}
-      {error && <p className="text-red-500">{error}</p>}
+        className="text-white rounded-[20px] mb-3 text-3xl flex justify-end items-end w-full"
+        onClick={navigateToFavorites}
+      >
+        <FaHeart className="text-red-600" />
+      </button>
 
       {/* Product Grid */}
       <div className="grid grid-cols-4 gap-11 ">
@@ -173,16 +207,14 @@ const Shop = () => {
               <div className="flex flex-col gap-3 h-[70%] items-start w-full">
                 <div className='flex justify-between items-center w-full'>
                   <h2 className="text-xl font-semibold">{product.name}</h2>
-                  <button
-                    onClick={() => handleLikeClick(product._id)}
-                    className='flex items-end'
-                  >
+                  <button onClick={() => handleLikeClick(product._id)} className='flex items-end'>
                     {likedProducts.includes(product._id) ? (
                       <FaHeart className="text-red-600" />
                     ) : (
                       <FaRegHeart className="text-gray-500" />
                     )}
                   </button>
+
                 </div>
                 <div className='h-[50px] flex text-start'>
                   <p className="text-white">{product.description}</p>

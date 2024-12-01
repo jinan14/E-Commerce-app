@@ -100,11 +100,71 @@ const useCartStore = create((set) => ({
       set({ error: 'An error occurred while creating the order.' });
     }
   },
+
+  products: [],
+  likedProducts: [],
+  searchQuery: '',
+  error: '',
+  successMessage: '',
+
+  // Fetch Products
+  fetchProducts: async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/v1/product/search');
+      set({ products: response.data.data, error: '' });
+    } catch (err) {
+      set({ error: 'Failed to fetch products.', products: [] });
+      console.error(err);
+    }
+  },
+
+  // Set Search Query
+  setSearchQuery: (query) => set({ searchQuery: query }),
+
+  // Toggle Liked Products
+  toggleLikedProduct: (productId) =>
+    set((state) => {
+      const isLiked = state.likedProducts.includes(productId);
+      const likedProducts = isLiked
+        ? state.likedProducts.filter((id) => id !== productId)
+        : [...state.likedProducts, productId];
+      return { likedProducts };
+    }),
+
+  // Add to Cart
+  addToCart: async (productId) => {
+    const token = localStorage.getItem('Token'); // Retrieve token from localStorage
+    if (!token) {
+      return { success: false, message: 'Please log in to add items to your cart.' };
+    }
+
+    const cartUpdate = {
+      cart: {
+        [productId]: 1, // Set quantity to 1 for simplicity
+      },
+    };
+
+    try {
+      const response = await fetch('http://localhost:5000/api/v1/cart/update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(cartUpdate),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        return { success: true, message: 'Product added to cart successfully!' };
+      }
+      return { success: false, message: result.message || 'Failed to add product to cart.' };
+    } catch (error) {
+      console.error('Error:', error);
+      return { success: false, message: 'An error occurred while adding the product to the cart.' };
+    }
+  },
   
-}),
-{
-  name: 'cart-store', // Key in localStorage
-  partialize: (state) => ({ cartItems: state.cartItems }), // Persist only cartItems
-}
-);
+}));
+
 export default useCartStore;
