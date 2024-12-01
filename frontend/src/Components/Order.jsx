@@ -6,6 +6,7 @@ const Order = () => {
   const navigate = useNavigate();
 
   const order = location.state?.order;
+  console.log("Order", order);
 
   if (!order) {
     return (
@@ -36,8 +37,8 @@ const Order = () => {
             className="flex items-center gap-4 border p-4 rounded shadow-md"
           >
             <img
-              src={`http://localhost:5000/${item.productId.pictures[0]}`} // Use the populated `pictures` array
-              alt={item.productId.name} // Use the populated `name`
+              src={`http://localhost:5000/${item.productId.pictures[0]}`} 
+              alt={item.productId.name} 
               className="w-28 h-28 object-cover rounded"
             />
             <div className="flex-grow">
