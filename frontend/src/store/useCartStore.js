@@ -1,8 +1,8 @@
 
 
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const useCartStore = create((set) => ({
@@ -101,5 +101,10 @@ const useCartStore = create((set) => ({
     }
   },
   
-}));
+}),
+{
+  name: 'cart-store', // Key in localStorage
+  partialize: (state) => ({ cartItems: state.cartItems }), // Persist only cartItems
+}
+);
 export default useCartStore;
