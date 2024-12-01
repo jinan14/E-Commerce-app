@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
 
 function Favorites() {
-  const [likedProducts, setLikedProducts] = useState([]); // Stores liked products
+  const [likedProducts, setLikedProducts] = useState([]); // Store liked product IDs
+  const [products, setProducts] = useState([]); // Store product details
   const navigate = useNavigate(); // Hook to navigate to other pages
 
   const token = localStorage.getItem('Token');
-  // Fetch liked products from the backend
+
+  // Fetch liked product IDs from the backend
   useEffect(() => {
     if (!token) return;
 
@@ -18,45 +21,69 @@ function Favorites() {
           headers: { Authorization: `Bearer ${token}` },
         });
         const likedIds = response.data.data.map((like) => like.productId);
-        console.log("111",response.data.data)
         setLikedProducts(likedIds);
-        console.log("liked IDs:", likedIds)
+
+        // Fetch product details
+        const productDetails = await Promise.all(
+          likedIds.map(async (id) => {
+            const productResponse = await axios.get(`http://localhost:5000/api/v1/product/${id}`, {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+            return productResponse.data.data.product;
+          })
+        );
+        setProducts(productDetails);
       } catch (err) {
-        console.error('Error fetching likes:', err);
+        console.error('Error fetching likes or products:', err);
       }
     };
 
     fetchLikedProducts();
   }, [token]);
+
   // Toggle like status for a product
   const handleLikeClick = async (productId) => {
+    const token = localStorage.getItem('Token');
+    if (!token) {
+      toast.error('Please log in to like products.');
+      return;
+    }
+  
     try {
-      // Determine action based on whether the product is already liked
-      const isLiked = likedProducts.some((product) => product.productId === productId);
-
-      if (isLiked) {
-        // Unlike the product
-        await axios.delete(`http://localhost:5000/api/v1/like/likes/${productId}`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      // Call the `/create` endpoint to toggle the like state
+      const response = await axios.post(
+        'http://localhost:5000/api/v1/like/create',
+        { productId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      if (response.status === 200) {
+        const { message } = response.data;
+        toast.success(message);
+  
+        setLikedProducts((prevLikedProducts) => {
+          if (prevLikedProducts.includes(productId)) {
+            // If product was already liked, remove it
+            return prevLikedProducts.filter((id) => id !== productId);
+          } else {
+            // If product was not liked, add it
+            return [...prevLikedProducts, productId];
+          }
         });
-        setLikedProducts((prev) => prev.filter((product) => product.productId !== productId));
-      } else {
-        // Like the product
-        await axios.post(
-          "http://localhost:5000/api/v1/like/likes",
-          { productId },
-          { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
-        );
-        setLikedProducts((prev) => [...prev, { productId }]);
       }
     } catch (error) {
-      console.error("Error toggling like:", error.message);
+      console.error('Error toggling like:', error.message);
+      toast.error('Error toggling like. Please try again.');
     }
   };
-  console.log("liked Products:",likedProducts)
+  
+
   const goToCart = () => {
-    // Pass the selected favorites directly to the Cart page
-    navigate("/cart", { state: { cart: likedProducts } });
+    navigate("/cart", { state: { cart: products } });
   };
 
   const ProductCarousel = ({ pictures }) => {
@@ -107,9 +134,9 @@ function Favorites() {
     <div className="min-h-screen flex flex-col justify-center items-center relative">
       <h1 className="text-3xl font-bold m-auto">Your Favorite Products</h1>
       <div className="flex gap-10 flex-wrap justify-center mt-3 mb-8 z-10">
-        {likedProducts.map((product) => (
+        {products.map((product) => (
           <div
-            key={product.productId}
+            key={product._id}
             className="border p-4 shadow-md w-[300px] h-[470px] gap-3 rounded-lg flex flex-col"
           >
             <div className="w-full h-[50%] relative">
@@ -119,8 +146,8 @@ function Favorites() {
               <div className="flex flex-col gap-3 h-[70%] items-start">
                 <div className="flex justify-between items-center w-full">
                   <h2 className="text-xl font-semibold">{product.name}</h2>
-                  <button onClick={() => handleLikeClick(product.productId)}>
-                    {likedProducts.some((liked) => liked.productId === product.productId) ? (
+                  <button onClick={() => handleLikeClick(product._id)}>
+                    {likedProducts.includes(product._id) ? (
                       <FaHeart className="text-red-600" />
                     ) : (
                       <FaRegHeart className="text-gray-400" />
@@ -141,7 +168,7 @@ function Favorites() {
                   Add to Cart
                 </button>
                 <button
-                  onClick={() => navigate(`/product/${product.productId}`)}
+                  onClick={() => navigate(`/product/${product._id}`)}
                   className="text-white p-2 px-3 rounded-3xl bg-orange-400 hover:bg-orange-500"
                 >
                   View Details

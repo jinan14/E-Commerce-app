@@ -168,6 +168,8 @@ const useCartStore = create((set) => ({
       return { success: false, message: 'An error occurred while adding the product to the cart.' };
     }
   },
+  //-------------------------------------------------------------------------------------------------------------
+  //Search 
   
 }));
 
