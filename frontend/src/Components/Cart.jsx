@@ -152,6 +152,47 @@ function Cart() {
     }
   };
 
+  const updateCartItemQuantity = async (productId, newQuantity) => {
+    const token = localStorage.getItem('Token');
+    if (!token) {
+      toast.error('Please log in to update cart.');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5000/api/v1/cart/updateItemQuantity`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productId,
+          quantity: newQuantity,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success('Quantity updated successfully!');
+        setCartItems((prevItems) =>
+          prevItems.map((item) =>
+            item.product._id === productId
+              ? { ...item, quantity: newQuantity }
+              : item
+          )
+        );
+      } else {
+        toast.error(result.message || 'Failed to update quantity.');
+      }
+    } catch (error) {
+      console.error('Error updating quantity:', error);
+      toast.error('An error occurred while updating quantity.');
+    }
+  };
+
+
   return (
     <>
       <div className="container mx-auto p-5 ">
@@ -207,9 +248,26 @@ function Cart() {
                           <p>
                             <b>Price:</b> ${item.product.price}
                           </p>
-                          <p>
-                            <b>Quantity:</b> {item.quantity}
-                          </p>
+                          <div>
+                            <p>
+                              <b>Quantity:</b>
+                              <button
+                                className="px-2 py-1 bg-gray-500 rounded mx-1"
+                                onClick={() => updateCartItemQuantity(item.product._id, item.quantity - 1)} // Decrease
+                                disabled={item.quantity <= 1} // Disable if quantity is 1
+                              >
+                                -
+                              </button>
+                              {item.quantity}
+                              <button
+                                className="px-2 py-1 bg-gray-500 rounded mx-1"
+                                onClick={() => updateCartItemQuantity(item.product._id, item.quantity + 1)} // Increase
+                              >
+                                +
+                              </button>
+                            </p>
+                          </div>
+
                         </div>
                         <div>
                           <button

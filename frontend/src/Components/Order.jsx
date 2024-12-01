@@ -6,7 +6,6 @@ const Order = () => {
   const navigate = useNavigate();
 
   const order = location.state?.order;
-  console.log("555",order)
 
   if (!order) {
     return (
@@ -27,15 +26,35 @@ const Order = () => {
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Order Summary</h1>
       <p><strong>Order ID:</strong> {order._id}</p>
+      <p><strong>Status:</strong> {order.status}</p>
       <p><strong>Total Price:</strong> ${order.totalAmount?.toFixed(2) || '0.00'}</p>
       <h2 className="text-xl font-semibold mt-4">Products:</h2>
-      <ul>
-        {order.products.map((product, index) => (
-          <li key={index}>
-            {product.quantity} x {product.product} - ${product.priceOfOne}
-          </li>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-4">
+        {order.products.map((item, index) => (
+          <div
+            key={index}
+            className="flex items-center gap-4 border p-4 rounded shadow-md"
+          >
+            <img
+              src={`http://localhost:5000/${item.productId.pictures[0]}`} // Use the populated `pictures` array
+              alt={item.productId.name} // Use the populated `name`
+              className="w-28 h-28 object-cover rounded"
+            />
+            <div className="flex-grow">
+              <h2 className="text-lg font-bold">{item.productId.name}</h2>
+              <p className="text-sm text-gray-400">
+                <strong>Price:</strong> ${item.productId.price.toFixed(2)}
+              </p>
+              <p className="text-sm text-gray-400">
+                <strong>Quantity:</strong> {item.quantity}
+              </p>
+              <p className="text-sm text-gray-400">
+                <strong>Total:</strong> ${(item.productId.price * item.quantity).toFixed(2)}
+              </p>
+            </div>
+          </div>
         ))}
-      </ul>
+      </div>
       <button
         onClick={() => navigate('/shop')}
         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
