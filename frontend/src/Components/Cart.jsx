@@ -18,7 +18,7 @@ function Cart() {
     proceedToCheckout,
   } = useCartStore();
 
-  const token = localStorage.getItem('Token'); // Assuming token is stored in localStorage
+  const token = localStorage.getItem('Token'); 
 
   useEffect(() => {
     if (token) {

@@ -10,31 +10,48 @@ import { MdLogout } from "react-icons/md";
 function Header({ searchQuery, setSearchQuery }) {
   const navigate = useNavigate();
 
-  const navigateToFavorites = () => {
-    // Find the liked products by matching the product ids
-    const likedProductDetails = products.filter(product =>
-      likedProducts.includes(product._id)
-    );
-
-    navigate("/favorites", { state: { likedProducts: likedProductDetails, likedProductIds: likedProducts } });
-  };
-
   return (
     <div className="flex justify-between items-center mt-3 mb-3">
       <h1 className="text-3xl font-bold">QuickShop</h1>
-      <div className="flex gap-3 w-[30%]">
-        <input
-          type="search"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)} // Update search query state
-          placeholder="Search a product..."
-          className="w-full px-3 py-1 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
-        />
-        <button
-          className="w-8 h-8 items-center flex p-2 bg-orange-400 justify-center rounded-full"
-        >
-          <IoSearch />
-        </button>
+      <div className="flex gap-3 ">
+        <div className="flex gap-3 ">
+          {/* Search by category */}
+          <button>
+            Furniture
+          </button>
+
+          <button>
+            Tables
+          </button>
+
+          <button>
+            Paintings
+          </button>
+        </div>
+        {/* Search by name and description */}
+        <div className="flex gap-3 ">
+          <input
+            type="search"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query state
+            placeholder="Search a product..."
+            className="w-full px-3 py-1 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
+          />
+          <button
+            className="w-8 h-8 items-center flex p-2 bg-orange-400 justify-center rounded-full"
+          >
+            <IoSearch />
+          </button>
+        </div>
+        <div className="flex gap-3 ">
+          <input type="number"  
+           placeholder='Min price '  
+           className="w-14 px-3 py-1 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"/>
+          
+          <input type="number"  
+          placeholder='Max price '   
+          className="w-14 px-3 py-1 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500" />
+        </div>
       </div>
       <div className="flex gap-3">
         <button
@@ -47,7 +64,7 @@ function Header({ searchQuery, setSearchQuery }) {
           className="bg-orange-400 text-xl text-white px-3 py-2 rounded-3xl hover:bg-orange-400"
           onClick={() => navigate('/cart')}><FaCartShopping />
         </button>
-        
+
         <button
           className="bg-red-500 text-xl text-white px-2 py-2 rounded-3xl hover:bg-red-400"
           onClick={() => navigate('/login')}

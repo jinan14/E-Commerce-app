@@ -1,7 +1,6 @@
 
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -100,7 +99,8 @@ const useCartStore = create((set) => ({
       set({ error: 'An error occurred while creating the order.' });
     }
   },
-
+//--------------------------------------------------------------------------------------------------------
+//Product Gallery-Shop.jsx
   products: [],
   likedProducts: [],
   searchQuery: '',
@@ -135,7 +135,8 @@ const useCartStore = create((set) => ({
   addToCart: async (productId) => {
     const token = localStorage.getItem('Token'); // Retrieve token from localStorage
     if (!token) {
-      return { success: false, message: 'Please log in to add items to your cart.' };
+      toast.error('Please log in to add items to your cart.');
+      return 
     }
 
     const cartUpdate = {
@@ -156,11 +157,14 @@ const useCartStore = create((set) => ({
 
       const result = await response.json();
       if (response.ok) {
-        return { success: true, message: 'Product added to cart successfully!' };
+        toast.success('Product added to cart successfully!');
+        return 
       }
-      return { success: false, message: result.message || 'Failed to add product to cart.' };
+      toast.error('Failed to add product to cart.' )
+      
     } catch (error) {
       console.error('Error:', error);
+      toast.error('An error occurred while adding the product to the cart.')
       return { success: false, message: 'An error occurred while adding the product to the cart.' };
     }
   },
