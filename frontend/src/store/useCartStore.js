@@ -108,15 +108,15 @@ const useCartStore = create((set) => ({
   successMessage: '',
 
   // Fetch Products
-  fetchProducts: async () => {
+  fetchProducts: async (filters = {}) => {
     try {
-      const response = await axios.get('http://localhost:5000/api/v1/product/search');
-      set({ products: response.data.data, error: '' });
-    } catch (err) {
-      set({ error: 'Failed to fetch products.', products: [] });
-      console.error(err);
+        const queryString = new URLSearchParams(filters).toString();
+        const response = await axios.get(`http://localhost:5000/api/v1/product/search?${queryString}`);
+        set({ products: response.data.data });
+    } catch (error) {
+        console.error('Error fetching products:', error);
     }
-  },
+},
 
   // Set Search Query
   setSearchQuery: (query) => set({ searchQuery: query }),
@@ -170,6 +170,31 @@ const useCartStore = create((set) => ({
   },
   //-------------------------------------------------------------------------------------------------------------
   //Search 
+
+  products: [],
+  searchQuery: '',
+  minPrice: '',
+  maxPrice: '',
+  category: '',
+  setSearchQuery: (query) => set({ searchQuery: query }),
+  setPriceRange: (min, max) => set({ minPrice: min, maxPrice: max }),
+  setCategory: (category) => set({ category }),
+  
+  searchProducts: async () => {
+    try {
+      const { searchQuery, minPrice, maxPrice, category } = useCartStore.getState();
+      const queryParams = new URLSearchParams();
+      if (searchQuery) queryParams.append('search', searchQuery);
+      if (category) queryParams.append('category', category);
+      if (minPrice) queryParams.append('minPrice', minPrice);
+      if (maxPrice) queryParams.append('maxPrice', maxPrice);
+
+      const response = await axios.get(`http://localhost:5000/api/v1/product/search?${queryParams.toString()}`);
+      set({ products: response.data.data });
+    } catch (error) {
+      console.error('Error searching products:', error);
+    }
+  },
   
 }));
 
