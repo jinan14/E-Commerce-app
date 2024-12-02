@@ -142,8 +142,8 @@ const Shop = () => {
     const filters = {};
 
     if (searchQuery) filters.search = searchQuery;
-    if (minPrice) filters.minPrice = minPrice; 
-    if (maxPrice) filters.maxPrice = maxPrice; 
+    if (minPrice) filters.minPrice = minPrice;
+    if (maxPrice) filters.maxPrice = maxPrice;
     if (category) filters.category = category;
 
     fetchProducts(filters); // Pass filters to Zustand fetchProducts
@@ -160,13 +160,9 @@ const Shop = () => {
       />
 
       <hr className="my-7" />
-      <button
-        className="text-white rounded-[20px] mb-3 text-3xl flex justify-end items-end w-full"
-        onClick={navigateToFavorites}
-      >
-        <FaHeart className="text-red-600" />
-      </button>
-      <div className="flex gap-4 my-4">
+      <div className="flex gap-4 my-4 items-center justify-between">
+       <div className="flex gap-4 my-4"> 
+
         <button
           onClick={() => {
             setSearchQuery('');
@@ -194,64 +190,75 @@ const Shop = () => {
           className="border px-2 py-1 rounded"
         />
         <button
-        onClick={applyFilters}
+          onClick={applyFilters}
+          className="bg-orange-400  text-lg text-white px-2 py-2 rounded-3xl hover:bg-orange-500 "
         >
-           <IoSearch />
+          <IoSearch />
         </button>
+       </div>
+        <div className=''>
+
+          <button
+            className="text-white rounded-[20px] mb-3 text-3xl flex justify-end items-end "
+            onClick={navigateToFavorites}
+          >
+            <FaHeart className="text-red-600" />
+          </button>
+        </div>
       </div>
 
       {/* Product Grid */}
       <div className="grid grid-cols-4 gap-11 ">
-        
-           {filteredProducts.map((product) => (
-            <div
-              key={product._id}
-              className="border p-4 shadow-md w-[300px] h-[470px] gap-3 rounded-lg flex flex-col"
-            >
-              {/* Product Image Carousel */}
-              <div className="w-full h-[50%] relative">
-                <ProductCarousel pictures={product.pictures} />
+
+        {filteredProducts.map((product) => (
+          <div
+            key={product._id}
+            className="border p-4 shadow-md w-[300px] h-[470px] gap-3 rounded-lg flex flex-col"
+          >
+            {/* Product Image Carousel */}
+            <div className="w-full h-[50%] relative">
+              <ProductCarousel pictures={product.pictures} />
+            </div>
+
+            {/* Product Info */}
+            <div className="flex flex-col gap-3 h-[50%] items-start">
+              <div className="flex flex-col gap-3 h-[70%] items-start w-full">
+                <div className="flex justify-between items-center w-full">
+                  <h2 className="text-xl font-semibold">{product.name}</h2>
+                  <button onClick={() => handleLikeClick(product._id)} className='flex items-end'>
+                    {likedProducts.includes(product._id) ? (
+                      <FaHeart className="text-red-600" />
+                    ) : (
+                      <FaRegHeart className="text-gray-500" />
+                    )}
+                  </button>
+                </div>
+                <div className="h-[50px] flex text-start">
+                  <p className="text-white">{product.description}</p>
+                </div>
+                <p className="text-white">Category: {product.category}</p>
+                <p className="text-white font-bold text-start">${product.price}</p>
               </div>
 
-              {/* Product Info */}
-              <div className="flex flex-col gap-3 h-[50%] items-start">
-                <div className="flex flex-col gap-3 h-[70%] items-start w-full">
-                  <div className="flex justify-between items-center w-full">
-                    <h2 className="text-xl font-semibold">{product.name}</h2>
-                    <button onClick={() => handleLikeClick(product._id)} className='flex items-end'>
-                      {likedProducts.includes(product._id) ? (
-                        <FaHeart className="text-red-600" />
-                      ) : (
-                        <FaRegHeart className="text-gray-500" />
-                      )}
-                    </button>
-                  </div>
-                  <div className="h-[50px] flex text-start">
-                    <p className="text-white">{product.description}</p>
-                  </div>
-                  <p className="text-white">Category: {product.category}</p>
-                  <p className="text-white font-bold text-start">${product.price}</p>
-                </div>
-
-                <div className="flex gap-5 h-[30%] items-center justify-between p-1">
-                  <button
-                    className="text-white p-2 px-3 rounded-3xl bg-blue-400 hover:bg-blue-600"
-                    onClick={() => addToCart(product._id)}
-                  >
-                    Add to Cart
-                  </button>
-                  <button
-                    onClick={() => navigate(`/product/${product._id}`)}
-                    className="text-white p-2 px-3 rounded-3xl bg-orange-400 hover:bg-orange-500"
-                  >
-                    View Details
-                  </button>
-                </div>
+              <div className="flex gap-5 h-[30%] items-center justify-between p-1">
+                <button
+                  className="text-white p-2 px-3 rounded-3xl bg-blue-400 hover:bg-blue-600"
+                  onClick={() => addToCart(product._id)}
+                >
+                  Add to Cart
+                </button>
+                <button
+                  onClick={() => navigate(`/product/${product._id}`)}
+                  className="text-white p-2 px-3 rounded-3xl bg-orange-400 hover:bg-orange-500"
+                >
+                  View Details
+                </button>
               </div>
             </div>
-          )
+          </div>
+        )
 
-          )}
+        )}
       </div>
     </div>
   );

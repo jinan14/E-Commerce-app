@@ -38,20 +38,22 @@ const Header = ({ searchQuery, setSearchQuery, applyFilters }) => {
                 </button>
               ))}
             </div>
+              <div className='flex gap-1'>
 
             <input
               type="text"
               placeholder="Search products..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)} // Optional if you want real-time update
-              className="w-64 px-3 py-1 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-64 px-3 py-1 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
             <button
               onClick={applyFilters}
-              className="px-4 bg-orange-500 text-white rounded-r-lg hover:bg-orange-600"
+              className="bg-orange-400 text-lg text-white px-2 py-2 rounded-3xl hover:bg-orange-400"
             >
               <IoSearch />
             </button>
+              </div>
           </div>
 
         </div>
@@ -67,7 +69,7 @@ const Header = ({ searchQuery, setSearchQuery, applyFilters }) => {
             className="bg-orange-400 text-xl text-white px-3 py-2 rounded-3xl hover:bg-orange-400"
             onClick={() => navigate('/cart')}><FaCartShopping />
           </button>
-
+      
           <button
             className="bg-red-500 text-xl text-white px-2 py-2 rounded-3xl hover:bg-red-400"
             onClick={() => navigate('/login')}

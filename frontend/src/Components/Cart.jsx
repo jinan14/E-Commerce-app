@@ -5,6 +5,7 @@ import { RxCross2 } from 'react-icons/rx';
 import toast, { Toaster } from 'react-hot-toast';
 import useCartStore from '../store/useCartStore';
 
+
 function Cart() {
   const navigate = useNavigate();
   const {
@@ -126,10 +127,10 @@ function Cart() {
                         <p>
                           <b>Price:</b> ${item.product.price}
                         </p>
-                        <div>
+                        <div className='flex mt-3 gap-3'>
                           <b>Quantity:</b>
                           <button
-                            className="px-2 py-1 bg-gray-500 rounded mx-1"
+                            className="flex items-center justify-center p-1 w-5 h-5 bg-gray-500 rounded mx-1"
                             onClick={() => updateCartItemQuantity(item.product._id, item.quantity - 1)}
                             disabled={item.quantity <= 1}
                           >
@@ -137,7 +138,7 @@ function Cart() {
                           </button>
                           {item.quantity}
                           <button
-                            className="px-2 py-1 bg-gray-500 rounded mx-1"
+                             className="flex items-center justify-center p-1 w-5 h-5 bg-gray-500 rounded mx-1"
                             onClick={() => updateCartItemQuantity(item.product._id, item.quantity + 1)}
                           >
                             +

@@ -48,7 +48,7 @@ function Favorites() {
       toast.error('Please log in to like products.');
       return;
     }
-  
+
     try {
       // Call the `/create` endpoint to toggle the like state
       const response = await axios.post(
@@ -60,11 +60,11 @@ function Favorites() {
           },
         }
       );
-  
+
       if (response.status === 200) {
         const { message } = response.data;
         toast.success(message);
-  
+
         setLikedProducts((prevLikedProducts) => {
           if (prevLikedProducts.includes(productId)) {
             // If product was already liked, remove it
@@ -80,7 +80,7 @@ function Favorites() {
       toast.error('Error toggling like. Please try again.');
     }
   };
-  
+
 
   const goToCart = () => {
     navigate("/cart", { state: { cart: products } });
@@ -132,7 +132,23 @@ function Favorites() {
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center relative">
-      <h1 className="text-3xl font-bold m-auto">Your Favorite Products</h1>
+      <div className="container mx-auto p-5">
+        <div className="flex justify-between items-center mt-3 mb-4">
+          <h1 className="text-3xl font-bold">QuickShop</h1>
+          <div className="flex gap-3">
+          
+            <button
+              onClick={() => navigate(-1)}
+              className="bg-blue-400 text-white px-4 py-2 rounded-3xl hover:bg-blue-500"
+            >
+              Back
+            </button>
+          </div>
+        </div>
+      <hr className="my-3" />
+      </div>
+
+      <h1 className="text-2xl font-bold m-auto">Your Favorite Products</h1>
       <div className="flex gap-10 flex-wrap justify-center mt-3 mb-8 z-10">
         {products.map((product) => (
           <div
