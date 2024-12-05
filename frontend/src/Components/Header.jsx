@@ -96,7 +96,7 @@ const Header = ({ searchQuery, setSearchQuery, applyFilters }) => {
   
       {/* Mobile Burger Menu (Visible on small and medium screens when menu is open) */}
       {menuOpen && (
-        <div className="absolute top-16 left-0 right-0 border-t-2 p-4 lg:hidden backdrop-blur-xl">
+        <div className="absolute top-16 left-0 right-0  p-5 lg:hidden backdrop-blur-xl">
           <div className="flex flex-col gap-3 items-center">
             <div className="flex gap-3 items-center">
               {['Furniture', 'Tables', 'Paintings'].map((category) => (
