@@ -39,59 +39,72 @@ const Login = () => {
   };
 
   return (
-    <div className="flex container h-[100vh] w-full ">
-        <Toaster />
-      <div className='w-[60%] '>
-          <img className='object-cover w-full h-full' src="/login.jpg" alt="" />
+    <div className="flex flex-col md:flex-row container h-[100vh] w-full">
+      <Toaster />
+      {/* Image Section */}
+      <div className="hidden md:block md:w-[60%]">
+        <img
+          className="object-cover w-full h-full"
+          src="/login.jpg"
+          alt=""
+        />
       </div>
-      <div className='w-[40%] flex items-center justify-center'>
-
-      <form
-        onSubmit={handleSubmit}
-         className="border-2 m-auto border-gray-700 flex flex-col gap-5 w-[400px] max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
-      >
-      <h2 className="text-3xl font-bold text-center mb-5">Login</h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        <div className='flex flex-col gap-1 '>
-          <label htmlFor="email" className="font-medium flex text-lg text-start ml-3">
-            Email
-          </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className='flex flex-col gap-1'>
-          <label htmlFor="password" className="font-medium flex text-lg text-start ml-3">
-            Password
-          </label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
-            placeholder="Enter your password"
-            value={formData.password}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+  
+      {/* Form Section */}
+      <div className="w-full h-full md:w-[40%] flex items-center justify-center p-5">
+        <form
+          onSubmit={handleSubmit}
+          className="border-2 border-gray-700 flex flex-col gap-5 w-full max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 m-auto shadow-lg backdrop-blur-2xl"
         >
-          Login
-        </button>
-      </form>
+          <h2 className="text-3xl font-bold text-center mb-5">Login</h2>
+          {error && <p className="text-red-500 text-center">{error}</p>}
+          
+          {/* Email Field */}
+          <div className="flex flex-col gap-1 ">
+            <label htmlFor="email" className="font-medium text-lg text-start ml-3">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+  
+          {/* Password Field */}
+          <div className="flex flex-col gap-1">
+            <label htmlFor="password" className="font-medium text-lg text-start ml-3">
+              Password
+            </label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+  
+          {/* Login Button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+          >
+            Login
+          </button>
+        </form>
       </div>
     </div>
   );
+  
 };
 
 export default Login;
