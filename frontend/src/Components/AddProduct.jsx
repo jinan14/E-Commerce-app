@@ -71,12 +71,12 @@ const AddProduct = () => {
   };
 
   return (
-    <div>
-      <h2 className="font-bold text-3xl mb-5 mt-5">Add New Product</h2>
-      <div className="flex justify-center items-center">
+    <div className="px-4">
+      <h2 className="font-bold text-3xl mb-5 mt-5 text-center">Add New Product</h2>
+      <div className="flex flex-wrap justify-center items-start gap-6">
         <form
           onSubmit={handleSubmit}
-          className="border-2 border-gray-700 flex flex-col gap-5 w-[50%] max-w-xs md:max-w-sm lg:max-w-md rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
+          className="border-2 border-gray-700 flex flex-col gap-5 w-full sm:w-[80%] md:w-[60%] lg:w-[40%] rounded-[20px] p-6 mx-auto shadow-lg backdrop-blur-2xl"
         >
           <input
             className="w-full px-3 py-2 border rounded-[20px] focus:outline-none focus:ring-2 focus:ring-gray-500"
@@ -122,18 +122,18 @@ const AddProduct = () => {
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full"
           >
             Add Product
           </button>
         </form>
-        <div className="w-[50%] grid grid-cols-2 gap-4">
+        <div className="w-full sm:w-[80%] md:w-[60%] lg:w-[40%] grid grid-cols-2 gap-4">
           {previewImages.map((url, index) => (
             <div key={index} className="flex flex-col items-center">
               <img
                 src={url}
                 alt="Preview"
-                className="w-[200px] h-[200px] object-cover"
+                className="w-full max-w-[150px] h-[150px] object-cover sm:max-w-[200px] sm:h-[200px]"
               />
               <button
                 type="button"
@@ -148,6 +148,7 @@ const AddProduct = () => {
       </div>
     </div>
   );
+  
 };
 
 export default AddProduct;
