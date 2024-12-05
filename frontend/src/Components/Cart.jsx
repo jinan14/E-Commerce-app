@@ -80,9 +80,9 @@ function Cart() {
   return (
     <div className="container mx-auto p-5">
       <Toaster />
-      <div className="flex justify-between items-center mt-3 mb-4">
+      <div className="flex flex-wrap justify-between items-center mt-3 mb-4 gap-3">
         <h1 className="text-3xl font-bold">QuickShop</h1>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <button
             className="bg-orange-400 text-white px-4 py-2 rounded-3xl hover:bg-orange-500"
             onClick={handleClearCart}
@@ -98,27 +98,28 @@ function Cart() {
         </div>
       </div>
       <hr className="my-3" />
-
+  
       <div className="p-4">
         <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
         {error && <p className="text-red-500">{error}</p>}
         {cartItems.length === 0 ? (
-          <p className="font-bold text-2xl mt-28">Your cart is empty.</p>
+          <p className="font-bold text-2xl mt-28 text-center">Your cart is empty.</p>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Cart Items */}
             <div className="col-span-2">
               <div className="flex flex-col gap-4">
                 {cartItems.map((item) => (
                   <div
                     key={item.product._id}
-                    className="flex items-center gap-4 border p-4 rounded shadow-md"
+                    className="flex flex-wrap items-center gap-4 border p-4 rounded shadow-md"
                   >
                     <img
                       src={`http://localhost:5000/${item.product.pictures[0]}`}
                       alt={item.product.name}
                       className="w-28 h-28 object-cover rounded"
                     />
-                    <div className="flex flex-grow justify-between items-center">
+                    <div className="flex flex-grow flex-wrap justify-between items-center">
                       <div>
                         <h2 className="text-lg font-bold">{item.product.name}</h2>
                         <p className="text-sm text-gray-400">{item.product.description}</p>
@@ -127,7 +128,7 @@ function Cart() {
                         <p>
                           <b>Price:</b> ${item.product.price}
                         </p>
-                        <div className='flex mt-3 gap-3'>
+                        <div className="flex items-center mt-3 gap-3">
                           <b>Quantity:</b>
                           <button
                             className="flex items-center justify-center p-1 w-5 h-5 bg-gray-500 rounded mx-1"
@@ -138,7 +139,7 @@ function Cart() {
                           </button>
                           {item.quantity}
                           <button
-                             className="flex items-center justify-center p-1 w-5 h-5 bg-gray-500 rounded mx-1"
+                            className="flex items-center justify-center p-1 w-5 h-5 bg-gray-500 rounded mx-1"
                             onClick={() => updateCartItemQuantity(item.product._id, item.quantity + 1)}
                           >
                             +
@@ -156,8 +157,9 @@ function Cart() {
                 ))}
               </div>
             </div>
-
-            <div className="p-4 rounded">
+  
+            {/* Cart Summary */}
+            <div className="p-4 rounded shadow-md">
               <h2 className="text-xl font-bold mb-4">Cart Summary</h2>
               <div className="flex justify-between mb-2">
                 <span>Total Items:</span>
@@ -179,6 +181,7 @@ function Cart() {
       </div>
     </div>
   );
+  
 }
 
 export default Cart;

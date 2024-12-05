@@ -150,7 +150,7 @@ const Shop = () => {
   };
 
   return (
-    <div className="container mx-auto p-5 ">
+    <div className="container mx-auto p-5">
       <Toaster />
       {/* Navigation Bar */}
       <Header
@@ -158,74 +158,74 @@ const Shop = () => {
         setSearchQuery={setSearchQuery}
         applyFilters={applyFilters}
       />
-
+  
       <hr className="my-7" />
-      <div className="flex gap-4 my-4 items-center justify-between">
-       <div className="flex gap-4 my-4"> 
-
-        <button
-          onClick={() => {
-            setSearchQuery('');
-            setMinPrice('');
-            setMaxPrice('');
-            setCategory('');
-            fetchProducts(); // Fetch all products
-          }}
-        >
-          All
-        </button>
-
-        <input
-          type="number"
-          placeholder="Min price"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-          className="border px-2 py-1 rounded"
-        />
-        <input
-          type="number"
-          placeholder="Max price"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-          className="border px-2 py-1 rounded"
-        />
-        <button
-          onClick={applyFilters}
-          className="bg-orange-400  text-lg text-white px-2 py-2 rounded-3xl hover:bg-orange-500 "
-        >
-          <IoSearch />
-        </button>
-       </div>
-        <div className=''>
-
+      <div className="flex gap-4 my-4 items-center justify-between flex-wrap">
+        <div className="flex gap-4 my-4 ">
+  
           <button
-            className="text-white rounded-[20px] mb-3 text-3xl flex justify-end items-end "
+            onClick={() => {
+              setSearchQuery('');
+              setMinPrice('');
+              setMaxPrice('');
+              setCategory('');
+              fetchProducts(); // Fetch all products
+            }}
+            className="text-lg sm:text-md"
+          >
+            All
+          </button>
+  
+          <input
+            type="number"
+            placeholder="Min price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            className="border px-2 py-1 rounded sm:w-[200px] w-full"
+          />
+          <input
+            type="number"
+            placeholder="Max price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            className="border px-2 py-1 rounded sm:w-[200px] w-full"
+          />
+          <button
+            onClick={applyFilters}
+            className="bg-orange-400 text-lg text-white px-2 py-2 rounded-3xl hover:bg-orange-500 sm:w-auto"
+          >
+            <IoSearch />
+          </button>
+        </div>
+  
+        <div className="flex justify-end w-full sm:w-auto">
+          <button
+            className="text-white rounded-[20px] mb-3 text-3xl"
             onClick={navigateToFavorites}
           >
             <FaHeart className="text-red-600" />
           </button>
         </div>
       </div>
-
+  
       {/* Product Grid */}
-      <div className="grid grid-cols-4 gap-11 ">
-
+      <div className="grid sm:grid-cols-2 justify-center md:grid-cols-3 lg:grid-cols-4 gap-8">
         {filteredProducts.map((product) => (
           <div
             key={product._id}
-            className="border p-4 shadow-md w-[300px] h-[470px] gap-3 rounded-lg flex flex-col"
+            className="border p-4 shadow-md w-full max-w-[300px] h-[470px] gap-3 rounded-lg flex flex-col"
           >
             {/* Product Image Carousel */}
             <div className="w-full h-[50%] relative">
               <ProductCarousel pictures={product.pictures} />
             </div>
-
+  
             {/* Product Info */}
             <div className="flex flex-col gap-3 h-[50%] items-start">
               <div className="flex flex-col gap-3 h-[70%] items-start w-full">
                 <div className="flex justify-between items-center w-full">
                   <h2 className="text-xl font-semibold">{product.name}</h2>
-                  <button onClick={() => handleLikeClick(product._id)} className='flex items-end'>
+                  <button onClick={() => handleLikeClick(product._id)} className="flex items-end">
                     {likedProducts.includes(product._id) ? (
                       <FaHeart className="text-red-600" />
                     ) : (
@@ -239,29 +239,28 @@ const Shop = () => {
                 <p className="text-white">Category: {product.category}</p>
                 <p className="text-white font-bold text-start">${product.price}</p>
               </div>
-
+  
               <div className="flex gap-5 h-[30%] items-center justify-between p-1">
                 <button
-                  className="text-white p-2 px-3 rounded-3xl bg-blue-400 hover:bg-blue-600"
+                  className="text-white p-2 rounded-3xl bg-blue-400 hover:bg-blue-600"
                   onClick={() => addToCart(product._id)}
                 >
                   Add to Cart
                 </button>
                 <button
                   onClick={() => navigate(`/product/${product._id}`)}
-                  className="text-white p-2 px-3 rounded-3xl bg-orange-400 hover:bg-orange-500"
+                  className="text-white p-2 rounded-3xl bg-orange-400 hover:bg-orange-500"
                 >
                   View Details
                 </button>
               </div>
             </div>
           </div>
-        )
-
-        )}
+        ))}
       </div>
     </div>
   );
+  
 };
 
 export default Shop;
