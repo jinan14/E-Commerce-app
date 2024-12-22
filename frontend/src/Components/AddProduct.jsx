@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
@@ -26,7 +27,7 @@ const AddProduct = () => {
     );
 
     if (images.length + uniqueFiles.length > 5) {
-      alert('You can only upload up to 5 images.');
+      toast.error('You can only upload up to 5 images.');
       return;
     }
 
@@ -62,16 +63,17 @@ const AddProduct = () => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      alert('Product created successfully!');
+      toast.success('Product created successfully!');
       navigate('/shop');
     } catch (error) {
-      alert('Product already exists');
+      toast.error('Product already exists');
       console.error('Error creating product:', error);
     }
   };
 
   return (
     <div className="px-4">
+      <Toaster />
       <h2 className="font-bold text-3xl mb-5 mt-5 text-center">Add New Product</h2>
       <div className="flex flex-wrap justify-center items-start gap-6">
         <form
